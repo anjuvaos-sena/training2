@@ -125,9 +125,19 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if DEBUG:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    # Producción en Render con Supabase S3-compatible
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+    AWS_ACCESS_KEY_ID = os.getenv("SUPABASE_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("SUPABASE_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SUPABASE_BUCKET", "media")
+    AWS_S3_ENDPOINT_URL = os.getenv("SUPABASE_ENDPOINT")  # Ej: https://<project-ref>.supabase.co/storage/v1/s3
+
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/" 
 
 
 # Email
