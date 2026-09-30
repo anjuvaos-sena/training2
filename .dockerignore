@@ -1,0 +1,17 @@
+.git
+.venv
+venv
+__pycache__
+*.py[cod]
+.env
+.env.*
+db.sqlite3
+db.sqlite3-journal
+media
+staticfiles
+htmlcov
+.coverage*
+.pytest_cache
+.playwright-mcp
+reports
+*.log

@@ -1,0 +1,20 @@
+CAMBIOS PARA DESPLIEGUE CON DOCKER EN RENDER
+
+1. Se agrego un Dockerfile basado en Python 3.14 slim. Instala requirements.txt,
+   recopila archivos estaticos y arranca Gunicorn en el puerto PORT de Render.
+2. docker-entrypoint.sh valida SECRET_KEY, DATABASE_URL y las credenciales de
+   Supabase antes de ejecutar migraciones y levantar la aplicacion.
+3. Se agrego .dockerignore para no copiar al contenedor entornos locales, bases
+   SQLite, archivos cargados, secretos, caches ni reportes.
+4. Se actualizo pr_eni/settings.py para usar STORAGES, con Supabase S3 para
+   archivos cargados en produccion y WhiteNoise para estaticos. En desarrollo
+   se conserva el almacenamiento local. Se agregaron dominios y origenes CSRF
+   para Render, y cabeceras/cookies seguras detras del proxy HTTPS.
+5. requirements.txt debe estar codificado como UTF-8 para que pip lo instale en
+   la imagen Linux.
+6. La base de datos SQLite y el sistema de archivos local del contenedor no son
+   persistentes en Render gratuito. La aplicacion requiere un PostgreSQL
+   persistente (DATABASE_URL) y almacenamiento S3 compatible de Supabase para
+   conservar datos y PDF entre reinicios y despliegues.
+7. Las instrucciones completas de provisionamiento y despliegue estan en
+   DEPLOY_README.txt.
